@@ -22,7 +22,7 @@ app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/jobs', jobsRouter);
 
 app.use(notFoundMiddleware);
-// app.use(errorHandlerMiddleware);
+app.use(errorHandlerMiddleware);
 
 const port = process.env.PORT || 3000;
 
