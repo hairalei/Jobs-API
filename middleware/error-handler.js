@@ -8,10 +8,6 @@ const errorHandlerMiddleware = (err, req, res, next) => {
     msg: err.message || 'Something went wrong. Please try again.',
   };
 
-  // if (err instanceof CustomAPIError) {
-  //   return res.status(err.statusCode).json({ msg: err.message });
-  // }
-
   if (err.name === 'ValidationError') {
     customError.msg = Object.values(err.errors)
       .map((item) => item.message)
@@ -22,6 +18,11 @@ const errorHandlerMiddleware = (err, req, res, next) => {
   if (err.code && err.code === 11000) {
     customError.msg = `${Object.keys(err.keyValue)} already exists`;
     customError.statusCode = StatusCodes.BAD_REQUEST;
+  }
+
+  if (err.name === 'CastError') {
+    customError.msg = `No item found with id: ${err.value}`;
+    customError.statusCode = StatusCodes.NOT_FOUND;
   }
 
   return res.status(customError.statusCode).json({ msg: customError.msg });
